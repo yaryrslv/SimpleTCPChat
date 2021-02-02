@@ -17,7 +17,14 @@ namespace Client
         }
         static void SendMessage()
         {
+            Console.WriteLine("Введите сообщение: ");
 
+            while (true)
+            {
+                string message = Console.ReadLine();
+                byte[] data = Encoding.Unicode.GetBytes(message);
+                stream.Write(data, 0, data.Length);
+            }
         }
         static void ReceiveMessage()
         {
