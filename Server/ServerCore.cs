@@ -50,11 +50,18 @@ namespace Server
         }
         protected internal void BroadcastMessage(string message, string id)
         {
-           
+            byte[] data = Encoding.Unicode.GetBytes(message);
+            for (int i = 0; i < clients.Count; i++)
+            {
+                if (clients[i].Id != id)
+                {
+                    clients[i].Stream.Write(data, 0, data.Length);
+                }
+            }
         }
         protected internal void Disconnect()
         {
-            
+           
         }
     }
 }
