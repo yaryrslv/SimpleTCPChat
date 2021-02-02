@@ -61,7 +61,13 @@ namespace Server
         }
         protected internal void Disconnect()
         {
-           
+            tcpListener.Stop();
+
+            for (int i = 0; i < clients.Count; i++)
+            {
+                clients[i].Close();
+            }
+            Environment.Exit(0);
         }
     }
 }
