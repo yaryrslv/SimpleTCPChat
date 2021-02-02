@@ -74,7 +74,14 @@ namespace Server
         }
         protected internal void Close()
         {
-
+            if (Stream != null)
+            {
+                Stream.Close();
+            }    
+            if (client != null)
+            {
+                client.Close();
+            }
         }
     }
 }
