@@ -14,11 +14,15 @@ namespace Server
 
         protected internal void AddConnection(ClientCore clientObject)
         {
-
+            clients.Add(clientObject);
         }
         protected internal void RemoveConnection(string id)
         {
-            
+            ClientCore client = clients.FirstOrDefault(c => c.Id == id);
+            if (client != null)
+            {
+                clients.Remove(client);
+            }
         }
         protected internal void Listen()
         {
