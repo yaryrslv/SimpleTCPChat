@@ -55,7 +55,15 @@ namespace Client
         }
         static void Disconnect()
         {
-           
+            if (stream != null)
+            {
+                stream.Close();
+            }
+            if (client != null)
+            {
+                client.Close();
+            }
+            Environment.Exit(0);
         }
     }
 }
