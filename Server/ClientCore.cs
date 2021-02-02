@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
-
+using System.Text;
 
 namespace Server
 {
@@ -29,6 +29,7 @@ namespace Server
                 message = userName + " вошел в чат";
                 server.BroadcastMessage(message, this.Id);
                 Console.WriteLine(message);
+
                 while (true)
                 {
                     try
@@ -59,7 +60,17 @@ namespace Server
         }
         private string GetMessage()
         {
+            byte[] data = new byte[64];
+            StringBuilder builder = new StringBuilder();
+            int bytes = 0;
+            do
+            {
+                bytes = Stream.Read(data, 0, data.Length);
+                builder.Append(Encoding.Unicode.GetString(data, 0, bytes));
+            }
+            while (Stream.DataAvailable);
 
+            return builder.ToString();
         }
         protected internal void Close()
         {
