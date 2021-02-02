@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Text;
+
 
 namespace Server
 {
@@ -21,7 +20,42 @@ namespace Server
         }
         public void Process()
         {
-            
+            try
+            {
+                Stream = client.GetStream();
+                string message = GetMessage();
+                userName = message;
+
+                message = userName + " вошел в чат";
+                server.BroadcastMessage(message, this.Id);
+                Console.WriteLine(message);
+                while (true)
+                {
+                    try
+                    {
+                        message = GetMessage();
+                        message = String.Format(userName + ": " + message);
+                        Console.WriteLine(message);
+                        server.BroadcastMessage(message, this.Id);
+                    }
+                    catch
+                    {
+                        message = String.Format(userName + ": покинул чат");
+                        Console.WriteLine(message);
+                        server.BroadcastMessage(message, this.Id);
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                server.RemoveConnection(this.Id);
+                Close();
+            }
         }
         private string GetMessage()
         {
