@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace Client
 {
@@ -13,7 +14,31 @@ namespace Client
         static NetworkStream stream;
         static void Main(string[] args)
         {
+            Console.Write("Введите свое имя: ");
+            userName = Console.ReadLine();
+            client = new TcpClient();
+            try
+            {
+                client.Connect(host, port);
+                stream = client.GetStream();
 
+                string message = userName;
+                byte[] data = Encoding.Unicode.GetBytes(message);
+                stream.Write(data, 0, data.Length);
+
+                Thread receiveThread = new Thread(new ThreadStart(ReceiveMessage));
+                receiveThread.Start();
+                Console.WriteLine("Добро пожаловать, {0}", userName);
+                SendMessage();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Disconnect();
+            }
         }
         static void SendMessage()
         {
